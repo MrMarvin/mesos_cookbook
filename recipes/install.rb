@@ -37,16 +37,14 @@ when 'debian', 'ubuntu'
     unless match.nil?
       major_version, _minor_version = match.captures
       distro_version = major_version
+      deb_url = "http://downloads.mesosphere.io/master/#{distro}/#{major_version}/mesos_#{node['mesos']['version']}-1.0.#{distro}#{major_version}#{_minor_version}_amd64.deb"
     end
   elsif distro == 'ubuntu'
-    # For now we need to use the latest 13.x based deb
-    # package until a trusty mesos deb is available
-    # on mesosphere site.
-    distro_version = '13.10' if distro_version == '14.04'
+    deb_url = "http://downloads.mesosphere.io/master/#{distro}/#{distro_version}/mesos_#{node['mesos']['version']}-1.0.#{distro}#{distro_version.gsub('.','')}_amd64.deb"
   end
 
   remote_file "#{Chef::Config[:file_cache_path]}/mesos.deb" do
-    source "http://downloads.mesosphere.io/master/#{distro}/#{distro_version}/mesos_#{node['mesos']['version']}_amd64.deb"
+    source deb_url
     action :create
     not_if { ::File.exist? '/usr/local/sbin/mesos-master' }
   end
@@ -83,7 +81,7 @@ when 'rhel', 'centos', 'amazon', 'scientific'
   end
 
   remote_file "#{Chef::Config[:file_cache_path]}/mesos-#{node['mesos']['version']}.rpm" do
-    source "http://downloads.mesosphere.io/master/centos/6/mesos_#{node['mesos']['version']}_x86_64.rpm"
+    source "http://downloads.mesosphere.io/master/centos/6/mesos-#{node['mesos']['version']}-1.0.#{distro}#{distro_version}.x86_64.rpm"
     action :create
     not_if { ::File.exist? '/usr/local/sbin/mesos-master' }
   end
