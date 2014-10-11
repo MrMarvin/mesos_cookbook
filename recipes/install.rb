@@ -35,12 +35,12 @@ when 'debian', 'ubuntu'
     match = distro_version.match(/(\d{1})(\.?\d+)?/i)
 
     unless match.nil?
-      major_version, _minor_version = match.captures
+      major_version, minor_version = match.captures
       distro_version = major_version
-      deb_url = "http://downloads.mesosphere.io/master/#{distro}/#{major_version}/mesos_#{node['mesos']['version']}-1.0.#{distro}#{major_version}#{_minor_version}_amd64.deb"
+      deb_url = "http://downloads.mesosphere.io/master/#{distro}/#{major_version}/mesos_#{node['mesos']['version']}-1.0.#{distro}#{major_version}#{minor_version}_amd64.deb"
     end
   elsif distro == 'ubuntu'
-    deb_url = "http://downloads.mesosphere.io/master/#{distro}/#{distro_version}/mesos_#{node['mesos']['version']}-1.0.#{distro}#{distro_version.gsub('.','')}_amd64.deb"
+    deb_url = "http://downloads.mesosphere.io/master/#{distro}/#{distro_version}/mesos_#{node['mesos']['version']}-1.0.#{distro}#{distro_version.gsub('.', '')}_amd64.deb"
   end
 
   remote_file "#{Chef::Config[:file_cache_path]}/mesos.deb" do
